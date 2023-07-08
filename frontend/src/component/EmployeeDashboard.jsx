@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import {Button} from "@chakra-ui/react"
 import {
   fetchEmployees,
   addEmployee,
@@ -17,7 +18,10 @@ const EmployeeDashboard = () => {
   const error = useSelector((state) => state.employeeReducer.error);
   const checkingData = useSelector((state) => state.employeeReducer);
 
-  console.log(checkingData, "checking data");
+  const handleAuthencation = () =>{
+    localStorage.clear();
+    window.location.reload();
+  }
 
   const [newEmployee, setNewEmployee] = useState({
     firstName: '',
@@ -92,6 +96,7 @@ const EmployeeDashboard = () => {
   return (
     <div className={styles.container}>
       <div>
+      <button onClick={handleAuthencation}>Logout</button>
         <h2>Employee Dashboard</h2>
         <div className={styles.filters}>
           <select value={filter} onChange={handleFilterChange}>
