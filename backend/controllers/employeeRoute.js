@@ -5,22 +5,30 @@ const router = express.Router();
 // Get employees with filter, sort, search, and pagination
 router.get('/', async (req, res) => {
   try {
-    const { filter, sort, search, page, limit } = req.query;
+    const { department, sort, order, search, page, item } = req.query;
 
-    const filters = filter ? JSON.parse(filter) : {};
-    const sortOptions = sort ? JSON.parse(sort) : { _id: 1 };
+    const filters = {};
+    if (department) {
+      filters.department = department;
+    }
+
+    const sortOptions = {};
+    if (sort) {
+      sortOptions[sort] = order === 'desc' ? -1 : 1;
+    }
+
     const searchQuery = search ? { $text: { $search: search } } : {};
 
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
+    const startIndex = (page - 1) * item;
+    const endIndex = page * item;
 
     const totalEmployees = await EmployeeModel.countDocuments(filters);
-    const totalPages = Math.ceil(totalEmployees / limit);
+    const totalPages = Math.ceil(totalEmployees / item);
 
     const employees = await EmployeeModel.find({ ...filters, ...searchQuery })
       .sort(sortOptions)
       .skip(startIndex)
-      .limit(limit);
+      .limit(item);
 
     const pagination = {
       currentPage: page,

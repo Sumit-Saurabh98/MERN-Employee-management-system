@@ -22,11 +22,12 @@ const EmployeeDashboard = () => {
     salary: '',
   });
 
-  const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
+  const [filter, setFilter] = useState('');
+  const [sort, setSort] = useState('');
 
   useEffect(() => {
-    dispatch(fetchEmployees());
-  }, [dispatch]);
+    dispatch(fetchEmployees(filter, sort));
+  }, [dispatch, filter, sort]);
 
   const handleInputChange = (e) => {
     setNewEmployee((prevState) => ({
@@ -47,7 +48,6 @@ const EmployeeDashboard = () => {
   };
 
   const handleUpdateEmployee = (employeeId) => {
-    setSelectedEmployeeId(employeeId);
     const updatedEmployee = employees.find((employee) => employee._id === employeeId);
     if (updatedEmployee) {
       setNewEmployee({ ...updatedEmployee });
@@ -55,9 +55,9 @@ const EmployeeDashboard = () => {
   };
 
   const handleSaveUpdateEmployee = () => {
+    const selectedEmployeeId = newEmployee._id;
     if (selectedEmployeeId) {
       dispatch(updateEmployee(selectedEmployeeId, newEmployee));
-      setSelectedEmployeeId(null);
       setNewEmployee({
         firstName: '',
         lastName: '',
@@ -72,10 +72,31 @@ const EmployeeDashboard = () => {
     dispatch(deleteEmployee(employeeId));
   };
 
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
+
+  const handleSortChange = (e) => {
+    setSort(e.target.value);
+  };
+
   return (
     <div className={styles.container}>
       <div>
         <h2>Employee Dashboard</h2>
+        <div className={styles.filters}>
+          <select value={filter} onChange={handleFilterChange}>
+            <option value="">All Departments</option>
+            <option value="ia">IA</option>
+            <option value="mentor">Mentor</option>
+            <option value="instructor">Instructor</option>
+          </select>
+          <select value={sort} onChange={handleSortChange}>
+            <option value="">Sort by Salary</option>
+            <option value="asc">Low to High</option>
+            <option value="desc">High to Low</option>
+          </select>
+        </div>
         <div className={styles.addEmployee}>
           <input
             type="text"
@@ -112,11 +133,7 @@ const EmployeeDashboard = () => {
             value={newEmployee.salary}
             onChange={handleInputChange}
           />
-          {selectedEmployeeId ? (
-            <button onClick={handleSaveUpdateEmployee}>Save</button>
-          ) : (
-            <button onClick={handleAddEmployee}>Add Employee</button>
-          )}
+          <button onClick={handleAddEmployee}>Add Employee</button>
         </div>
       </div>
       {error && <p className={styles.error}>{error}</p>}

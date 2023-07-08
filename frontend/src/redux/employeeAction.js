@@ -33,15 +33,34 @@ export const fetchEmployeesFailure = (error) => {
 };
 
 // Fetch employees with pagination, sorting, and filtering
-export const fetchEmployees = (page, limit, filter, sort) => {
+export const fetchEmployees = (department, order, search, page, item) => {
   return async (dispatch) => {
     dispatch(fetchEmployeesStart());
 
     try {
       const token = localStorage.getItem('token');
 
+      const params = {};
+
+      if (department) {
+        params.department = department;
+      }
+      if (order) {
+        params.sort = 'salary';
+        params.order = order;
+      }
+      if (search) {
+        params.search = search;
+      }
+      if (page) {
+        params.page = page;
+      }
+      if (item) {
+        params.item = item;
+      }
+
       const response = await axios.get(`${BASE_URL}/employee`, {
-        params: { page, limit, filter, sort },
+        params,
         headers: { Authorization: token },
       });
 
@@ -52,6 +71,11 @@ export const fetchEmployees = (page, limit, filter, sort) => {
     }
   };
 };
+
+
+
+
+
 
 // Action creators for adding an employee
 export const addEmployeeStart = () => {
