@@ -23,8 +23,6 @@ const Signup = () => {
     setConfirmPassword('');
   };
 
-console.log(loading)
-
   return (
     <div className={styles.container}>
       <h2>Signup</h2>
