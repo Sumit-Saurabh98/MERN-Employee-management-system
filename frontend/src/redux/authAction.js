@@ -26,7 +26,7 @@ export const signup = (email, password, confirmPassword) => {
       });
 
       const { user, token } = response.data;
-    //   console.log(response)
+      console.log(response)
       dispatch(signupSuccess(user, token));
     } catch (error) {
       dispatch(signupFailure(error.response.data.message));

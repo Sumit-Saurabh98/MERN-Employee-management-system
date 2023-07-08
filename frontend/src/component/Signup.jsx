@@ -13,7 +13,9 @@ const Signup = () => {
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.authReducer.loading);
   const error = useSelector((state) => state.authReducer.error);
+  const isAuthChecking = useSelector((state) => state.authReducer.isAuthenticated);
   const navigate = useNavigate();
+
 
   const handleSignup = (e) => {
     e.preventDefault();
@@ -22,6 +24,10 @@ const Signup = () => {
     setPassword('');
     setConfirmPassword('');
   };
+
+  if(isAuthChecking){
+    navigate('/login')
+  }
 
   return (
     <div className={styles.container}>
