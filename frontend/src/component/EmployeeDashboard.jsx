@@ -9,10 +9,15 @@ import {
 import styles from '../styles/EmployeeDashboard.module.css';
 
 const EmployeeDashboard = () => {
+
+  const [selectedEmployeeId, setSelectedEmployeId] = useState(null)
   const dispatch = useDispatch();
   const employees = useSelector((state) => state.employeeReducer.employees);
   const loading = useSelector((state) => state.employeeReducer.loading);
   const error = useSelector((state) => state.employeeReducer.error);
+  const checkingData = useSelector((state) => state.employeeReducer);
+
+  console.log(checkingData, "checking data");
 
   const [newEmployee, setNewEmployee] = useState({
     firstName: '',
@@ -37,17 +42,21 @@ const EmployeeDashboard = () => {
   };
 
   const handleAddEmployee = () => {
-    dispatch(addEmployee(newEmployee));
-    setNewEmployee({
-      firstName: '',
-      lastName: '',
-      email: '',
-      department: '',
-      salary: '',
-    });
+    if(selectedEmployeeId){
+      dispatch(updateEmployee(selectedEmployeeId, newEmployee))
+      setSelectedEmployeId(null)
+      setNewEmployee({
+        firstName: '',
+        lastName: '',
+        email: '',
+        department: '',
+        salary: '',
+      });
+    }
   };
 
   const handleUpdateEmployee = (employeeId) => {
+    setSelectedEmployeId(employeeId);
     const updatedEmployee = employees.find((employee) => employee._id === employeeId);
     if (updatedEmployee) {
       setNewEmployee({ ...updatedEmployee });

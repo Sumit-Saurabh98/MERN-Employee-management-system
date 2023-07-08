@@ -63,7 +63,6 @@ export const fetchEmployees = (department, order, search, page, item) => {
         params,
         headers: { Authorization: token },
       });
-
       const employees = response.data.employees;
       dispatch(fetchEmployeesSuccess(employees));
     } catch (error) {

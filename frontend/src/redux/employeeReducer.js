@@ -17,6 +17,7 @@ const initialState = {
   employees: [],
   loading: false,
   error: null,
+  pagination:{}
 };
 
 const employeeReducer = (state = initialState, action) => {
